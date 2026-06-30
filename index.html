@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量化产品全景报告 | 富婆的马</title>
+<style>
+  @import url('data:text/css;base64,');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0e14;
+    --surface: #12171f;
+    --surface2: #1a1f2b;
+    --border: #1e2a3a;
+    --text: #c8d6e5;
+    --text-dim: #6b7d95;
+    --accent: #00e5ff;
+    --accent2: #7c4dff;
+    --accent3: #00c853;
+    --gold: #ffab00;
+    --red: #ff5252;
+    --font-mono: 'Courier New', 'Source Code Pro', 'Fira Code', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scan line effect */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 50px;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 15px;
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding: 30px;
+    margin: 0 0 50px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 900;
+    font-family: var(--font-mono);
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 50px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 25px;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+    letter-spacing: 1px;
+    position: relative;
+  }
+
+  .section-title .num {
+    position: absolute;
+    left: -60px;
+    color: rgba(0,229,255,0.15);
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 900;
+    top: -18px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: rgba(0,229,255,0.3);
+    box-shadow: 0 0 30px rgba(0,229,255,0.05);
+  }
+
+  .card.tier-1 { border-left: 3px solid var(--gold); }
+  .card.tier-2 { border-left: 3px solid var(--accent); }
+  .card.tier-3 { border-left: 3px solid var(--accent2); }
+  .card.global { border-left: 3px solid var(--accent3); }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .card-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .card-name-en {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    margin-left: 8px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    padding: 3px 10px;
+    font-size: 11px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+  }
+
+  .tag.aum { background: rgba(124,77,255,0.15); color: var(--accent2); border: 1px solid rgba(124,77,255,0.3); }
+  .tag.return { background: rgba(0,200,83,0.15); color: var(--accent3); border: 1px solid rgba(0,200,83,0.3); }
+  .tag.city { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.25); }
+  .tag.special { background: rgba(255,171,0,0.1); color: var(--gold); border: 1px solid rgba(255,171,0,0.3); }
+
+  .card-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 600px) {
+    .card-info { grid-template-columns: 1fr; }
+  }
+
+  .info-item {
+    font-size: 14px;
+  }
+
+  .info-label {
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+
+  .card-desc {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .card-links {
+    margin-top: 14px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .card-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    border-bottom: 1px dashed rgba(0,229,255,0.3);
+    padding-bottom: 2px;
+    transition: all 0.2s;
+  }
+
+  .card-link:hover {
+    color: #fff;
+    border-bottom-color: #fff;
+  }
+
+  /* Tier section divider */
+  .tier-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 30px 0 15px;
+    padding: 8px 16px;
+    background: var(--surface2);
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  /* Table of contents */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+
+  .toc-title {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 6px 24px;
+  }
+
+  .toc-list li a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+    display: block;
+    padding: 4px 0;
+  }
+
+  .toc-list li a:hover { color: var(--accent); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+
+  .footer .brand {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  /* Pulse animation for live indicator */
+  .live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent3);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,200,83,0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 8px rgba(0,200,83,0); }
+  }
+
+  /* Trend arrow */
+  .trend-up { color: var(--accent3); }
+  .trend-bar {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .trend-bar .bar-row {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    gap: 12px;
+  }
+
+  .bar-label {
+    width: 100px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+
+  .bar-fill {
+    height: 22px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    position: relative;
+    transition: width 1s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .disclaimer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-top: 40px;
+    font-size: 13px;
+    color: var(--text-dim);
+    border-left: 3px solid var(--red);
+  }
+
+  .disclaimer strong { color: var(--red); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 15px; }
+    .header { padding: 40px 15px 30px; }
+    .stats-bar { gap: 20px; padding: 20px; }
+    .stat-value { font-size: 24px; }
+    .section-title .num { display: none; }
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; color: #000; }
+    body::before, body::after { display: none; }
+    .card { border: 1px solid #ccc; background: #fafafa; }
+    .title { -webkit-text-fill-color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="badge"><span class="live-dot"></span>QUANT INTELLIGENCE · 2026</div>
+    <h1 class="title">量化产品全景报告</h1>
+    <p class="subtitle">近年热门量化投资产品深度梳理 · 国内私募 + 国际巨头</p>
+  </header>
+
+  <!-- Stats bar -->
+  <div class="stats-bar" id="stats">
+    <div class="stat-item">
+      <div class="stat-value">55+</div>
+      <div class="stat-label">百亿量化私募</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">22万亿</div>
+      <div class="stat-label">私募总规模</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">37.61%</div>
+      <div class="stat-label">百亿量化2025均收益</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">4家</div>
+      <div class="stat-label">800亿+头部</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <div class="toc-title">▌ 目 录</div>
+    <ul class="toc-list">
+      <li><a href="#tier1">→ 第一梯队 (800-900亿)</a></li>
+      <li><a href="#tier2">→ 第二梯队 (500-700亿)</a></li>
+      <li><a href="#global">→ 国际量化巨头</a></li>
+      <li><a href="#trends">→ 行业趋势</a></li>
+      <li><a href="#links">→ 重要链接汇总</a></li>
+    </ul>
+  </nav>
+
+  <!-- Trend visualization -->
+  <div class="trend-bar">
+    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin-bottom: 14px; letter-spacing: 1px;">
+      ▌ 头部机构管理规模对比 (亿元, 2026Q1)
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">幻方量化</span>
+      <div class="bar-fill" style="width: 89%;">850</div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">九坤投资</span>
+      <div class="bar-fill" style="width: 84%;">800</div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">明汯投资</span>
+      <div class="bar-fill" style="width: 89%;">850</div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">衍复投资</span>
+      <div class="bar-fill" style="width: 84%;">800</div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">世纪前沿</span>
+      <div class="bar-fill" style="width: 68%;">650</div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">灵均投资</span>
+      <div class="bar-fill" style="width: 58%;">550</div>
+    </div>
+  </div>
+
+  <!-- Tier 1: 第一梯队 -->
+  <div class="section" id="tier1">
+    <h2 class="section-title"><span class="num">01</span>第一梯队 · 800-900亿</h2>
+
+    <div class="card tier-1">
+      <div class="card-header">
+        <div>
+          <span class="card-name">幻方量化</span>
+          <span class="card-name-en">High-Flyer</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">800-900亿</span>
+          <span class="tag return">2025 +56.55%</span>
+          <span class="tag city">杭州</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>梁文锋（DeepSeek创始人）</div>
+        <div class="info-item"><span class="info-label">成立</span>2015年</div>
+        <div class="info-item"><span class="info-label">策略</span>指数增强、中性策略、AI驱动</div>
+        <div class="info-item"><span class="info-label">特色</span>"萤火二号"万卡A100集群</div>
+      </div>
+      <div class="card-desc">
+        梁文锋2019年即重注AI算力，投资10亿建成"萤火二号"，配备1万张A100显卡。2023年创立DeepSeek，使幻方天然享有最前沿AI能力。2025年收益56.55%位列百亿量化第二，梁文锋以1846亿身家跻身新财富前十。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.high-flyer.cn/" target="_blank">→ 官网 high-flyer.cn</a>
+      </div>
+    </div>
+
+    <div class="card tier-1">
+      <div class="card-header">
+        <div>
+          <span class="card-name">九坤投资</span>
+          <span class="card-name-en">Ubiquant</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">800-900亿</span>
+          <span class="tag city">北京</span>
+          <span class="tag special">AI Lab</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">成立</span>2012年</div>
+        <div class="info-item"><span class="info-label">规模</span>800-900亿元</div>
+        <div class="info-item"><span class="info-label">策略</span>指增、中性、CTA、AI驱动</div>
+        <div class="info-item"><span class="info-label">员工</span>171人（行业第一）</div>
+      </div>
+      <div class="card-desc">
+        与微软亚研院联合发表Logic-RL论文，构建"北溟"超算集群，90%投研团队来自清北/常春藤。不仅在量化投资中应用AI，更通过旗下创投布局AI产业链，打造技术生态壁垒。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.ubiquant.com/" target="_blank">→ 官网 ubiquant.com</a>
+      </div>
+    </div>
+
+    <div class="card tier-1">
+      <div class="card-header">
+        <div>
+          <span class="card-name">明汯投资</span>
+          <span class="card-name-en">Minghong</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">800-900亿</span>
+          <span class="tag city">上海</span>
+          <span class="tag special">规模第一</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>裘慧明（宾大物理学博士）</div>
+        <div class="info-item"><span class="info-label">成立</span>2014年</div>
+        <div class="info-item"><span class="info-label">策略</span>多策略（指增、中性、CTA、宏观）</div>
+        <div class="info-item"><span class="info-label">备案</span>2026年产品数全行业第一</div>
+      </div>
+      <div class="card-desc">
+        规模居全行业首位。创始人曾任职Millennium，策略覆盖最全。大力推行"投资于人"战略，与清北等顶尖高校合作设立人才培养计划。2026年3月旗下宏观策略产品曾出现约15%快速回撤——但龙头体量摆在那。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.minghonginvest.com/" target="_blank">→ 官网 minghonginvest.com</a>
+      </div>
+    </div>
+
+    <div class="card tier-1">
+      <div class="card-header">
+        <div>
+          <span class="card-name">衍复投资</span>
+          <span class="card-name-en">Yanfu</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">800-900亿</span>
+          <span class="tag city">上海</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>高亢（IMO金牌、MIT双学位）</div>
+        <div class="info-item"><span class="info-label">成立</span>2019年</div>
+        <div class="info-item"><span class="info-label">策略</span>高频迭代+多因子覆盖</div>
+        <div class="info-item"><span class="info-label">迭代</span>模型每周更新（行业平均每月）</div>
+      </div>
+      <div class="card-desc">
+        仅6年跻身顶级梯队。创始人曾任职Two Sigma，团队每年投入超亿元用于算力升级。主动关闭中证500/1000指增申购以控制规模维持策略有效性——体现了量化"规模是超额天敌"的铁律。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.yanfuinvestment.com/" target="_blank">→ 官网 yanfuinvestment.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier 2 -->
+  <div class="section" id="tier2">
+    <h2 class="section-title"><span class="num">02</span>第二梯队 · 500-700亿</h2>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">灵均投资</span>
+          <span class="card-name-en">Lingjun</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">500-600亿</span>
+          <span class="tag return">2025 +73.51% 🏆</span>
+          <span class="tag city">北京</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>蔡枚杰、马志宇（曾任职WorldQuant）</div>
+        <div class="info-item"><span class="info-label">成立</span>2014年</div>
+        <div class="info-item"><span class="info-label">2025业绩</span>百亿私募总冠军</div>
+      </div>
+      <div class="card-desc">
+        一个完整的"事故→整改→回归"样本：2024年2月因程序化异常交易被处罚（1分钟卖出25.67亿），暂停备案15个月。整改后2025年以73.51%的平均收益拿下百亿私募总冠军，是量化行业最具戏剧性的翻身案例。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.lingjuninvest.com/" target="_blank">→ 官网 lingjuninvest.com</a>
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">世纪前沿资产</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">600-700亿</span>
+          <span class="tag special">增速第一</span>
+          <span class="tag city">上海</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">成立</span>2015年</div>
+        <div class="info-item"><span class="info-label">2025增速</span>规模净增300亿+</div>
+        <div class="info-item"><span class="info-label">策略</span>指增、中性</div>
+      </div>
+      <div class="card-desc">
+        2025年规模增速最快的量化机构，从三四百亿陡增至600-700亿俱乐部。核心团队平均超10年量化经验，2024年密集推出小盘指增产品，踩准了中小盘活跃行情。
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">宽德投资</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">550-600亿</span>
+          <span class="tag city">上海</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">策略</span>中频多线指增+中性</div>
+        <div class="info-item"><span class="info-label">特色</span>90后实控人</div>
+      </div>
+      <div class="card-desc">
+        中高频策略见长，2025年初主动封盘控规模。"宽德锦囊"科普专栏在量化投教领域颇具影响力。核心产品"宽德量化精选"规模达180亿元。
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">诚奇资产</span>
+          <span class="card-name-en">Chengqi</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">500-600亿</span>
+          <span class="tag return">2025 +52.08%</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">2025收益</span>均值52.08%</div>
+        <div class="info-item"><span class="info-label">策略</span>股票量化</div>
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">黑翼资产</span>
+          <span class="card-name-en">Blackwing</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">500-600亿</span>
+          <span class="tag city">上海</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">策略</span>CTA+指增双轮驱动</div>
+        <div class="info-item"><span class="info-label">投教</span>"翼探究竟"系列漫画</div>
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.blackwingasset.com/" target="_blank">→ 官网 blackwingasset.com</a>
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">鸣石基金</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">500-600亿</span>
+          <span class="tag special">Q1连跳三级</span>
+        </div>
+      </div>
+      <div class="card-desc">
+        2026年Q1规模从200-300亿连跃三级至500-600亿，是本季度跨度最大的机构。
+      </div>
+    </div>
+
+    <div class="card tier-2">
+      <div class="card-header">
+        <div>
+          <span class="card-name">龙旗科技</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">500-600亿</span>
+          <span class="tag return">2025收益前十</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">成立</span>2011年</div>
+        <div class="info-item"><span class="info-label">特色</span>深度学习+NLP文本特征</div>
+      </div>
+      <div class="card-desc">
+        引入自然语言处理技术解读上市公司公告，构建10万+文本特征的另类数据池。2025年推出创业板/科创板精选、中证红利指增等差异化产品。
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier 3: Other notable -->
+  <div class="tier-label">▌ 其他知名量化私募（2025收益均值）</div>
+
+  <div class="card tier-3" style="margin-bottom: 12px;">
+    <div class="card-header">
+      <span class="card-name" style="font-size:16px;">天演资本 / 进化论资产 / 稳博投资 / 信弘天禾 / 聚宽投资 / 金戈量锐 / 茂源量化 / 磐松资产</span>
+    </div>
+    <div class="card-desc">
+      2025年收益均值均在45%-54%区间，磐松资产以低费率模式著称（部分产品免管理费，T+2赎回），天演资本三年期收益均值居百亿量化前列。
+    </div>
+  </div>
+
+  <!-- Global -->
+  <div class="section" id="global">
+    <h2 class="section-title"><span class="num">03</span>国际量化巨头</h2>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Renaissance Technologies</span>
+          <span class="card-name-en">文艺复兴科技</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">~$1100亿</span>
+          <span class="tag return">Medallion 66%+年化</span>
+          <span class="tag special">传奇</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>James Simons（已故）</div>
+        <div class="info-item"><span class="info-label">旗舰产品</span>Medallion Fund（大奖章基金）</div>
+        <div class="info-item"><span class="info-label">团队</span>约90位PhD，仅对员工开放</div>
+      </div>
+      <div class="card-desc">
+        华尔街史上最成功的对冲基金。大奖章基金1988-2018三十年间年化收益超66%（费前），扣除费用后约39%。2020年疫情年份仍飙涨76%。策略是金融界最深的黑箱，几乎从不向外界透露任何细节。Simons本人是顶尖数学家（陈-西蒙斯理论），团队以数据科学家和数学家为主。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.rentec.com/" target="_blank">→ 官网 rentec.com</a>
+        <a class="card-link" href="https://en.wikipedia.org/wiki/Renaissance_Technologies" target="_blank">→ Wikipedia</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Two Sigma</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">~$700亿</span>
+          <span class="tag city">纽约</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">特色</span>机器学习驱动，PhD科学家为主</div>
+        <div class="info-item"><span class="info-label">在华机构</span>腾胜投资（2025规模破100亿）</div>
+      </div>
+      <div class="card-desc">
+        受文艺复兴和D.E. Shaw启发，以数据科学家而非MBA为核心。2025年末管理规模创历史新高~700亿美元。其在华机构腾胜投资2025年管理规模突破100亿元人民币，将成熟市场的策略理念引入本土。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.twosigma.com/" target="_blank">→ 官网 twosigma.com</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">D.E. Shaw &amp; Co.</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag city">纽约</span>
+          <span class="tag special">老牌先驱</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>David E. Shaw</div>
+        <div class="info-item"><span class="info-label">成立</span>1988年</div>
+      </div>
+      <div class="card-desc">
+        量化对冲基金先驱，1988年由哥伦比亚大学计算机教授David E. Shaw创立。最早将计算机科学系统化应用于金融交易，培养了大量后来创立其他量化基金的顶尖人才（包括Two Sigma创始人和亚马逊Jeff Bezos早期团队）。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.deshaw.com/" target="_blank">→ 官网 deshaw.com</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Citadel</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">~$670亿</span>
+          <span class="tag city">芝加哥</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>Ken Griffin</div>
+        <div class="info-item"><span class="info-label">旗舰基金</span>Wellington（年化约20%）</div>
+        <div class="info-item"><span class="info-label">做市业务</span>Citadel Securities</div>
+      </div>
+      <div class="card-desc">
+        多策略巨头，2008年金融危机中几乎翻车但强力复苏。旗下Citadel Securities是全球最大做市商之一。Wellington基金自成立以来年化约20%，2022年大赚38%一战封神，2025年收益约15%。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.citadel.com/" target="_blank">→ 官网 citadel.com</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Jane Street</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag special">专有交易</span>
+          <span class="tag return">2025净收入$396亿</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">类型</span>专有交易公司（自有资金）</div>
+        <div class="info-item"><span class="info-label">核心</span>ETF套利、做市</div>
+        <div class="info-item"><span class="info-label">2025</span>交易净收入$396亿（华尔街纪录）</div>
+      </div>
+      <div class="card-desc">
+        华尔街最神秘的交易巨头之一，以ETF套利和做市闻名。2025年创造了华尔街有史以来最高的交易净收入纪录。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.janestreet.com/" target="_blank">→ 官网 janestreet.com</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Millennium Management</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">~$835亿</span>
+          <span class="tag city">纽约</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>Israel Englander</div>
+        <div class="info-item"><span class="info-label">策略</span>多策略平台，极致风控</div>
+        <div class="info-item"><span class="info-label">规模</span>$835亿（2026年1月）</div>
+      </div>
+      <div class="card-desc">
+        全球最大的多策略对冲基金平台之一。以"团队制"管理大量独立交易小组，实行严格风控。灵均投资CIO马志宇、明汯创始人裘慧明均曾任职于此。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.mlp.com/" target="_blank">→ 官网 mlp.com</a>
+      </div>
+    </div>
+
+    <div class="card global">
+      <div class="card-header">
+        <div>
+          <span class="card-name">Bridgewater Associates</span>
+          <span class="card-name-en">桥水基金</span>
+        </div>
+        <div class="card-tags">
+          <span class="tag aum">~$920亿</span>
+          <span class="tag city">康涅狄格</span>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">创始人</span>Ray Dalio</div>
+        <div class="info-item"><span class="info-label">策略</span>全球宏观（系统化决策）</div>
+      </div>
+      <div class="card-desc">
+        全球最大对冲基金（按净AUM），虽非纯量化但大量使用系统化决策框架。Dalio的"原则"和全天候策略在业界影响深远。
+      </div>
+      <div class="card-links">
+        <a class="card-link" href="https://www.bridgewater.com/" target="_blank">→ 官网 bridgewater.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trends -->
+  <div class="section" id="trends">
+    <h2 class="section-title"><span class="num">04</span>行业趋势</h2>
+
+    <div class="card">
+      <div class="card-desc" style="display:flex;flex-direction:column;gap:14px;">
+        <p><strong style="color:var(--accent);">📈 规模爆发：</strong>2025年百亿私募从89家增至113家，量化从33家增至55家。私募总规模首破22万亿。</p>
+        <p><strong style="color:var(--accent3);">💰 业绩碾压：</strong>2025年百亿量化私募平均收益37.61%，全部正收益。75家有业绩展示的百亿私募98.67%正收益。</p>
+        <p><strong style="color:var(--accent2);">🤖 AI深度融合：</strong>幻方→DeepSeek，九坤→北溟超算，龙旗→NLP文本因子。技术壁垒已成唯一护城河。</p>
+        <p><strong style="color:var(--gold);">🔒 封盘控规模：</strong>宽德、衍复等主动限制申购——"规模是超额的天敌"成为行业共识。</p>
+        <p><strong style="color:var(--accent);">🌍 国际化竞争：</strong>Two Sigma腾胜投资在华规模破百亿，本土机构加速布局海外。</p>
+        <p><strong style="color:var(--text);">📚 投教升级：</strong>宽德锦囊、黑翼漫画、明汯专栏、九坤视频——头部机构集体推进投资者教育。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <div class="section" id="links">
+    <h2 class="section-title"><span class="num">05</span>重要链接汇总</h2>
+
+    <div class="card">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:10px;">
+        <div>
+          <strong style="color:var(--gold);">国内量化私募</strong>
+          <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:13px;">
+            <a class="card-link" href="https://www.high-flyer.cn/" target="_blank">幻方量化 high-flyer.cn</a>
+            <a class="card-link" href="https://www.ubiquant.com/" target="_blank">九坤投资 ubiquant.com</a>
+            <a class="card-link" href="https://www.minghonginvest.com/" target="_blank">明汯投资 minghonginvest.com</a>
+            <a class="card-link" href="https://www.yanfuinvestment.com/" target="_blank">衍复投资 yanfuinvestment.com</a>
+            <a class="card-link" href="https://www.lingjuninvest.com/" target="_blank">灵均投资 lingjuninvest.com</a>
+            <a class="card-link" href="https://www.blackwingasset.com/" target="_blank">黑翼资产 blackwingasset.com</a>
+          </div>
+        </div>
+        <div>
+          <strong style="color:var(--accent3);">国际量化巨头</strong>
+          <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:13px;">
+            <a class="card-link" href="https://www.rentec.com/" target="_blank">Renaissance rentec.com</a>
+            <a class="card-link" href="https://www.twosigma.com/" target="_blank">Two Sigma twosigma.com</a>
+            <a class="card-link" href="https://www.deshaw.com/" target="_blank">D.E. Shaw deshaw.com</a>
+            <a class="card-link" href="https://www.citadel.com/" target="_blank">Citadel citadel.com</a>
+            <a class="card-link" href="https://www.janestreet.com/" target="_blank">Jane Street janestreet.com</a>
+            <a class="card-link" href="https://www.mlp.com/" target="_blank">Millennium mlp.com</a>
+            <a class="card-link" href="https://www.bridgewater.com/" target="_blank">Bridgewater bridgewater.com</a>
+          </div>
+        </div>
+        <div>
+          <strong style="color:var(--accent);">数据与研究来源</strong>
+          <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:13px;">
+            <a class="card-link" href="https://www.simuwang.com/" target="_blank">私募排排网 simuwang.com</a>
+            <a class="card-link" href="https://waylandz.com/quant-book/" target="_blank">Wayland 量化研究 waylandz.com</a>
+            <a class="card-link" href="https://www.amac.org.cn/" target="_blank">中基协 amac.org.cn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <strong>⚠ 免责声明</strong><br>
+    本报告数据来源于私募排排网、证券时报、21世纪经济报道、中新经纬、财联社、Wayland Zhang量化研究等公开渠道，
+    统计截止至2026年6月。所有数据和排名仅供参考，<strong>不构成任何投资建议</strong>。
+    历史业绩不代表未来收益，量化策略存在模型失效、流动性枯竭、监管政策变化等风险。
+    投资有风险，入市需谨慎。
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="brand">富婆的马</div>
+    <div style="margin-top:6px;">量化产品全景报告 · 2026年6月 · Made with ❤️</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
