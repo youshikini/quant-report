@@ -3,343 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A股AI赛道全景报告 | 富婆的马</title>
+<title>富婆的马 · 投资研究报告</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  :root {
-    --bg:#05080f; --s1:#0a101f; --s2:#0f1829; --bd:#152036;
-    --tx:#d0dce8; --td:#5a7090; --ac:#00e5ff; --a2:#00ff88;
-    --a3:#ff6b6b; --go:#ffb800; --pu:#b366ff;
-    --fn:'-apple-system','PingFang SC','Microsoft YaHei',sans-serif;
-    --fm:'Courier New','Fira Code',monospace;
+  body {
+    background:#060a10; color:#d0dce8; font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
   }
-  body { background:var(--bg); color:var(--tx); font-family:var(--fn); line-height:1.7; min-height:100vh; }
   body::before {
     content:''; position:fixed; inset:0;
-    background-image:radial-gradient(circle at 30% 20%, rgba(0,229,255,0.04) 0, transparent 50%),
-      radial-gradient(circle at 70% 60%, rgba(0,255,136,0.03) 0, transparent 50%),
+    background:radial-gradient(circle at 30% 30%, rgba(0,229,255,0.06) 0, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(0,255,136,0.04) 0, transparent 50%),
       linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px);
-    background-size:100% 100%, 100% 100%, 40px 40px, 40px 40px;
-    pointer-events:none; z-index:0;
+    background-size:100% 100%,100% 100%,40px 40px,40px 40px; z-index:0;
   }
-  body::after {
-    content:''; position:fixed; inset:0;
-    background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);
-    pointer-events:none; z-index:9999;
+  .wrap { position:relative; z-index:1; text-align:center; padding:40px 20px; }
+  .logo { font-size:14px; color:#00e5ff; font-family:'Courier New',monospace; letter-spacing:3px; margin-bottom:30px; }
+  .h1 { font-size:clamp(28px,5vw,42px); font-weight:900; background:linear-gradient(135deg,#00e5ff,#00ff88); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:50px; }
+  .cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
+  .card {
+    background:#0f1825; border:1px solid #1a2a40; border-radius:12px; padding:36px 28px; width:320px;
+    text-decoration:none; transition:all 0.3s; text-align:left; position:relative; overflow:hidden;
   }
-  .wrap { max-width:1200px; margin:0 auto; padding:20px; position:relative; z-index:1; }
-
-  .hero { text-align:center; padding:70px 20px 50px; border-bottom:1px solid var(--bd); margin-bottom:50px; position:relative; }
-  .hero::after {
-    content:''; position:absolute; bottom:-1px; left:50%; transform:translateX(-50%);
-    width:300px; height:2px; background:linear-gradient(90deg,transparent,var(--ac),var(--a2),transparent);
-  }
-  .chip { display:inline-block; padding:3px 12px; border:1px solid var(--a2); color:var(--a2); font-family:var(--fm); font-size:11px; letter-spacing:2px; margin-bottom:18px; }
-  .h1 { font-size:clamp(30px,5vw,52px); font-weight:900; background:linear-gradient(135deg,var(--ac),var(--a2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:1px; margin-bottom:8px; }
-  .sub { color:var(--td); font-size:14px; font-family:var(--fm); }
-
-  .stats { display:flex; justify-content:center; gap:30px; flex-wrap:wrap; padding:25px; margin:0 0 50px; background:var(--s1); border:1px solid var(--bd); border-radius:8px; }
-  .st { text-align:center; min-width:110px; }
-  .stv { font-size:30px; font-weight:900; font-family:var(--fm); background:linear-gradient(135deg,var(--ac),var(--a2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  .stl { font-size:12px; color:var(--td); margin-top:3px; letter-spacing:1px; }
-
-  .sec { margin-bottom:55px; }
-  .sec-t { font-size:22px; font-weight:700; color:var(--ac); padding-left:14px; border-left:3px solid var(--ac); margin-bottom:22px; display:flex; align-items:center; gap:12px; }
-  .sec-num { font-family:var(--fm); font-size:13px; color:var(--a2); background:rgba(0,255,136,0.1); padding:3px 10px; border-radius:3px; letter-spacing:1px; }
-
-  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(350px, 1fr)); gap:18px; }
-  @media (max-width:400px) { .grid { grid-template-columns:1fr; } }
-
-  .card { background:var(--s1); border:1px solid var(--bd); border-radius:8px; padding:24px; transition:all 0.3s; position:relative; overflow:hidden; }
-  .card:hover { border-color:rgba(0,229,255,0.3); box-shadow:0 0 25px rgba(0,229,255,0.06); }
-  .card.t-cpu { border-left:3px solid var(--ac); }
-  .card.t-opt { border-left:3px solid var(--a2); }
-  .card.t-srv { border-left:3px solid var(--pu); }
-  .card.t-pcb { border-left:3px solid var(--go); }
-  .card.t-sto { border-left:3px solid #ff6b6b; }
-  .card.t-app { border-left:3px solid #ff9800; }
-
-  .c-head { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
-  .c-name { font-size:19px; font-weight:700; color:#fff; }
-  .c-code { font-size:12px; color:var(--td); font-family:var(--fm); }
-  .c-tags { display:flex; gap:6px; flex-wrap:wrap; }
-  .tg { padding:2px 8px; font-size:10px; border-radius:3px; font-family:var(--fm); }
-  .tg.rv { background:rgba(0,255,136,0.1); color:var(--a2); border:1px solid rgba(0,255,136,0.25); }
-  .tg.mc { background:rgba(176,102,255,0.1); color:var(--pu); border:1px solid rgba(176,102,255,0.25); }
-  .tg.ct { background:rgba(0,229,255,0.08); color:var(--ac); border:1px solid rgba(0,229,255,0.2); }
-  .tg.ns { background:rgba(255,184,0,0.1); color:var(--go); border:1px solid rgba(255,184,0,0.25); }
-
-  .c-info { display:grid; grid-template-columns:1fr 1fr; gap:5px 16px; margin-bottom:10px; font-size:13px; }
-  @media (max-width:400px) { .c-info { grid-template-columns:1fr; } }
-  .ci-l { color:var(--td); font-size:11px; }
-
-  .c-desc { color:var(--td); font-size:13px; line-height:1.65; margin-bottom:10px; }
-
-  .c-fin { background:var(--s2); border-radius:5px; padding:12px 15px; margin-bottom:10px; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-  .fn { font-size:12px; color:var(--td); }
-  .fv { font-size:16px; font-weight:700; color:#fff; font-family:var(--fm); }
-  .fv.up { color:var(--a2); }
-  .fv.down { color:var(--a3); }
-
-  .c-links { display:flex; gap:12px; flex-wrap:wrap; font-size:12px; margin-top:8px; }
-  .cl { color:var(--ac); text-decoration:none; font-family:var(--fm); border-bottom:1px dashed rgba(0,229,255,0.3); padding-bottom:1px; transition:0.2s; }
-  .cl:hover { color:#fff; border-color:#fff; }
-
-  .insight { background:var(--s1); border:1px solid var(--bd); border-radius:8px; padding:24px; margin-top:30px; }
-  .insight h3 { color:var(--a2); font-size:16px; margin-bottom:12px; }
-  .insight p { color:var(--td); font-size:14px; line-height:1.8; }
-
-  .footer { text-align:center; padding:40px; border-top:1px solid var(--bd); margin-top:40px; color:var(--td); font-size:13px; }
-  .footer .brand { color:var(--ac); font-weight:700; font-size:15px; }
-
-  .disc { background:var(--s1); border:1px solid var(--bd); border-left:3px solid var(--a3); border-radius:6px; padding:16px; margin-top:30px; font-size:12px; color:var(--td); }
-
-  .bar-wrap { margin:20px 0; padding:18px; background:var(--s1); border:1px solid var(--bd); border-radius:6px; }
-  .bar-row { display:flex; align-items:center; margin:8px 0; gap:10px; }
-  .bar-label { width:90px; text-align:right; font-size:11px; color:var(--td); font-family:var(--fm); flex-shrink:0; }
-  .bar-fill { height:20px; border-radius:3px; min-width:40px; display:flex; align-items:center; padding-left:8px; font-size:11px; font-family:var(--fm); color:#fff; font-weight:600; }
-  .bar-fill.bf1 { background:linear-gradient(90deg,#00e5ff,#0088cc); }
-  .bar-fill.bf2 { background:linear-gradient(90deg,#00ff88,#00aa55); }
-  .bar-fill.bf3 { background:linear-gradient(90deg,#b366ff,#6633cc); }
-  .bar-fill.bf4 { background:linear-gradient(90deg,#ffb800,#cc7700); }
-
-  @media print {
-    body { background:#fff; color:#000; }
-    body::before,body::after { display:none; }
-    .card { border:1px solid #ddd; background:#fafafa; }
-    .h1 { -webkit-text-fill-color:#000; }
-  }
-
-  .cov-dot { display:inline-block; width:7px; height:7px; background:var(--a2); border-radius:50%; margin-right:6px; animation:cvd 2s infinite; }
-  @keyframes cvd { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0.5)} 50%{opacity:0.5;box-shadow:0 0 0 6px rgba(0,255,136,0)} }
+  .card:hover { border-color:rgba(0,229,255,0.4); box-shadow:0 0 40px rgba(0,229,255,0.08); transform:translateY(-3px); }
+  .card .icon { font-size:32px; margin-bottom:16px; }
+  .card .title { font-size:20px; font-weight:700; color:#fff; margin-bottom:8px; }
+  .card .desc { font-size:13px; color:#5a7090; line-height:1.6; }
+  .card .tag { display:inline-block; margin-top:16px; padding:4px 12px; border-radius:3px; font-size:11px; font-family:'Courier New',monospace; }
+  .card.c1 { border-left:3px solid #00e5ff; }
+  .card.c1 .tag { background:rgba(0,229,255,0.1); color:#00e5ff; border:1px solid rgba(0,229,255,0.25); }
+  .card.c2 { border-left:3px solid #00ff88; }
+  .card.c2 .tag { background:rgba(0,255,136,0.1); color:#00ff88; border:1px solid rgba(0,255,136,0.25); }
+  .footer { margin-top:60px; color:#3a5060; font-size:13px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hero">
-    <div class="chip"><span class="cov-dot"></span>AI INTELLIGENCE · 2026Q2</div>
-    <h1 class="h1">A股AI赛道全景报告</h1>
-    <p class="sub">八大核心赛道 × 头部上市公司 × 核心财务数据</p>
-  </header>
-
-  <div class="stats">
-    <div class="st"><div class="stv">8000亿$</div><div class="stl">全球AI资本开支</div></div>
-    <div class="st"><div class="stv">140万亿</div><div class="stl">日均Token调用量</div></div>
-    <div class="st"><div class="stv">417%</div><div class="stl">算力需求同比增速</div></div>
-    <div class="st"><div class="stv">55家</div><div class="stl">百亿量化私募</div></div>
+  <div class="logo">INVESTMENT RESEARCH · 富婆的马</div>
+  <h1 class="h1">投资研究报告</h1>
+  <div class="cards">
+    <a href="quant.html" class="card c1">
+      <div class="icon">📊</div>
+      <div class="title">量化产品全景报告</div>
+      <div class="desc">国内百亿量化私募 + 国际巨头深度梳理，含幻方、九坤、Renaissance、Two Sigma等机构对比。</div>
+      <div class="tag">量化私募 · 2026</div>
+    </a>
+    <a href="ai.html" class="card c2">
+      <div class="icon">🤖</div>
+      <div class="title">A股AI赛道全景报告</div>
+      <div class="desc">8大AI核心赛道 × 头部上市公司，含AI芯片、光模块、服务器、AI应用等赛道财务数据。</div>
+      <div class="tag">AI赛道 · 2026</div>
+    </a>
   </div>
-
-  <div class="bar-wrap">
-    <div style="font-family:var(--fm);font-size:12px;color:var(--ac);margin-bottom:12px;">▌ AI核心赛道涨幅对比 (2024低点至今最大涨幅倍数)</div>
-    <div class="bar-row"><span class="bar-label">光模块</span><div class="bar-fill bf1" style="width:82%;">8.2x</div></div>
-    <div class="bar-row"><span class="bar-label">AI芯片</span><div class="bar-fill bf2" style="width:76%;">7.6x</div></div>
-    <div class="bar-row"><span class="bar-label">PCB</span><div class="bar-fill bf3" style="width:58%;">5.8x</div></div>
-    <div class="bar-row"><span class="bar-label">AI应用</span><div class="bar-fill bf4" style="width:42%;">4.2x</div></div>
-  </div>
-
-  <!-- 赛道1: AI芯片 -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">01</span>AI芯片 · 国产算力核心</div>
-    <div class="grid">
-      <div class="card t-cpu">
-        <div class="c-head"><div><span class="c-name">寒武纪</span><span class="c-code"> 688256.SH</span></div><div class="c-tags"><span class="tg rv">+453%</span><span class="tg ct">上海</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>思元系列AI芯片</div><div><span class="ci-l">核心能力</span>云端推理/训练</div></div>
-        <div class="c-desc">国产AI芯片标杆。2025年上市以来首份盈利年报，单卡性能对标H100级别，适配千亿参数大模型。DeepSeek等国货大模型已优先适配。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">64.97亿</div></div><div><div class="fn">营收增速</div><div class="fv up">+453%</div></div><div><div class="fn">2025净利</div><div class="fv up">20.59亿</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.cambricon.com/" target="_blank">cambricon.com</a></div>
-      </div>
-      <div class="card t-cpu">
-        <div class="c-head"><div><span class="c-name">海光信息</span><span class="c-code"> 688041.SH</span></div><div class="c-tags"><span class="tg rv">+57%</span><span class="tg ct">天津</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>CPU+DCU双芯</div><div><span class="ci-l">核心能力</span>信创/数据中心</div></div>
-        <div class="c-desc">CPU+DCU双芯协同，主打信创、运营商数据中心。2025营收+57%，稳健增长但因传统客户占比高，AI弹性不如寒武纪。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">+57%</div></div><div><div class="fn">2025净利增速</div><div class="fv up">+32%</div></div><div><div class="fn">核心定位</div><div class="fv">信创DCU</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.hygon.cn/" target="_blank">hygon.cn</a></div>
-      </div>
-      <div class="card t-cpu">
-        <div class="c-head"><div><span class="c-name">沐曦股份</span><span class="c-code"> 688802.SH</span></div><div class="c-tags"><span class="tg rv">+121%</span><span class="tg ns">科创板新贵</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>国产GPU推理芯片</div><div><span class="ci-l">核心能力</span>万级集群</div></div>
-        <div class="c-desc">2025年科创板IPO，国产GPU从实验室走向流水线。运营商招标中实现规模化替代，但当前仍处投入期、尚未盈利。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">+121%</div></div><div><div class="fn">阶段</div><div class="fv">投入期</div></div><div><div class="fn">定位</div><div class="fv">推理GPU</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.metax-tech.com/" target="_blank">metax-tech.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道2: 光模块 -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">02</span>光模块 · AI集群互联血管</div>
-    <div class="grid">
-      <div class="card t-opt">
-        <div class="c-head"><div><span class="c-name">中际旭创</span><span class="c-code"> 300308.SZ</span></div><div class="c-tags"><span class="tg rv">+109%</span><span class="tg ct">苏州</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>800G/1.6T光模块</div><div><span class="ci-l">核心能力</span>CPO光电共封装</div></div>
-        <div class="c-desc">全球光模块龙头，800G/1.6T高速光模块领导者。2025年CPO 1.6T产品正式出货，受益全球算力基建持续高增。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">+60%</div></div><div><div class="fn">2025净利增速</div><div class="fv up">+109%</div></div><div><div class="fn">王牌</div><div class="fv">1.6T CPO</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.zj-innolight.com/" target="_blank">zj-innolight.com</a></div>
-      </div>
-      <div class="card t-opt">
-        <div class="c-head"><div><span class="c-name">新易盛</span><span class="c-code"> 300502.SZ</span></div><div class="c-tags"><span class="tg rv">+240%</span><span class="tg ct">成都</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>800G多芯光纤光模块</div><div><span class="ci-l">核心能力</span>泰国工厂放量</div></div>
-        <div class="c-desc">2025净利暴增231-249%，泰国一二期工厂快速放量。800G多芯光纤光模块全球首发量产导入，业绩弹性行业最强。</div>
-        <div class="c-fin"><div><div class="fn">2025净利</div><div class="fv up">+240%</div></div><div><div class="fn">产能</div><div class="fv">泰国工厂</div></div><div><div class="fn">产品</div><div class="fv">800G多芯</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.eoptolink.com/" target="_blank">eoptolink.com</a></div>
-      </div>
-      <div class="card t-opt">
-        <div class="c-head"><div><span class="c-name">天孚通信</span><span class="c-code"> 300394.SZ</span></div><div class="c-tags"><span class="tg rv">+50%</span><span class="tg ct">苏州</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>光引擎器件</div><div><span class="ci-l">核心能力</span>上游精密器件</div></div>
-        <div class="c-desc">光模块上游器件龙头，光引擎产品定点供应大客户。2025营收+59%、净利+50%。上游配套，增速略逊于模组厂但更加稳健。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">+59%</div></div><div><div class="fn">2025净利</div><div class="fv up">+50%</div></div><div><div class="fn">定位</div><div class="fv">上游器件</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.tfcsz.com/" target="_blank">tfcsz.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道3: AI服务器/算力租赁 -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">03</span>AI服务器 · 算力基建主力军</div>
-    <div class="grid">
-      <div class="card t-srv">
-        <div class="c-head"><div><span class="c-name">工业富联</span><span class="c-code"> 601138.SH</span></div><div class="c-tags"><span class="tg rv">+103%</span><span class="tg ns">千亿市值</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>AI GPU机柜/服务器</div><div><span class="ci-l">核心能力</span>全球AI服务器龙头</div></div>
-        <div class="c-desc">全球最大AI服务器制造商之一。2026Q1营收2511亿+57%、净利106亿+103%。AI GPU机柜出货同比增3.8倍，800G交换机同比增1.6倍。母集团鸿海预计2026资本开支488亿。</div>
-        <div class="c-fin"><div><div class="fn">2026Q1营收</div><div class="fv up">2511亿</div></div><div><div class="fn">2026Q1净利</div><div class="fv up">106亿</div></div><div><div class="fn">AI服务器增速</div><div class="fv up">+3.8x</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.fii-foxconn.com/" target="_blank">fii-foxconn.com</a></div>
-      </div>
-      <div class="card t-srv">
-        <div class="c-head"><div><span class="c-name">协创数据</span><span class="c-code"> 300857.SZ</span></div><div class="c-tags"><span class="tg rv">+343%</span><span class="tg ct">深圳</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>算力租赁/数据中心</div><div><span class="ci-l">核心能力</span>算力项目批量交付</div></div>
-        <div class="c-desc">算力租赁新贵。2026Q1净利7.5亿+343%，前期布局多个算力项目进入交付计费阶段。单季净利已相当于2025全年64%。</div>
-        <div class="c-fin"><div><div class="fn">2026Q1净利</div><div class="fv up">7.5亿</div></div><div><div class="fn">Q1增速</div><div class="fv up">+343%</div></div><div><div class="fn">赛道</div><div class="fv">算力租赁</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.coosensor.com/" target="_blank">coosensor.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道4: PCB -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">04</span>PCB · AI算力高速电路板</div>
-    <div class="grid">
-      <div class="card t-pcb">
-        <div class="c-head"><div><span class="c-name">胜宏科技</span><span class="c-code"> 300476.SZ</span></div><div class="c-tags"><span class="tg rv">+274%</span><span class="tg ct">惠州</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>AI服务器高端PCB</div><div><span class="ci-l">核心能力</span>高多层/高速</div></div>
-        <div class="c-desc">A股PCB中增长最猛。2025年净利+274%，营收+80%。AI算力、数据中心多款高端产品大规模量产，产品线向高价值方向升级。Morgan Stanley预计AI光模块PCB市场2025-2028年CAGR 83%。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">+80%</div></div><div><div class="fn">2025净利</div><div class="fv up">+274%</div></div><div><div class="fn">赛道CAGR</div><div class="fv up">83%</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.shpcb.com/" target="_blank">shpcb.com</a></div>
-      </div>
-      <div class="card t-pcb">
-        <div class="c-head"><div><span class="c-name">深南电路</span><span class="c-code"> 002916.SZ</span></div><div class="c-tags"><span class="tg rv">+74%</span><span class="tg ct">深圳</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>AI算力PCB/封装基板</div><div><span class="ci-l">核心能力</span>高层数PCB量产</div></div>
-        <div class="c-desc">2025净利+74%，募集资金投向AI算力电子电路项目。产品精准匹配智算中心技术要求，AI服务器PCB产能持续扩张。</div>
-        <div class="c-fin"><div><div class="fn">2025净利</div><div class="fv up">+74%</div></div><div><div class="fn">产能</div><div class="fv up">扩产中</div></div><div><div class="fn">定位</div><div class="fv">智算PCB</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.shennan.com/" target="_blank">shennan.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道5: 存储/HBM -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">05</span>存储/HBM · AI算力记忆核心</div>
-    <div class="grid">
-      <div class="card t-sto">
-        <div class="c-head"><div><span class="c-name">佰维存储</span><span class="c-code"> 688525.SH</span></div><div class="c-tags"><span class="tg rv">+429%</span><span class="tg ct">深圳</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>AI端侧存储器</div><div><span class="ci-l">核心能力</span>先进封装</div></div>
-        <div class="c-desc">2025净利暴增429%，扣非+1072%。受益AI存储涨价周期，DDR5模组及相关产品量价齐升。积极布局先进封装和端侧AI存储。</div>
-        <div class="c-fin"><div><div class="fn">2025净利</div><div class="fv up">+429%</div></div><div><div class="fn">扣非增速</div><div class="fv up">+1,072%</div></div><div><div class="fn">触发</div><div class="fv">存储涨价</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.biwin.com/" target="_blank">biwin.com</a></div>
-      </div>
-      <div class="card t-sto">
-        <div class="c-head"><div><span class="c-name">兆易创新</span><span class="c-code"> 603986.SH</span></div><div class="c-tags"><span class="tg rv">+49%</span><span class="tg mc">NOR Flash龙头</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>NOR Flash/MCU</div><div><span class="ci-l">核心能力</span>消费/工业/汽车</div></div>
-        <div class="c-desc">国内存储芯片设计龙头，主攻利基型NOR Flash。2025净利+49%，受益AI终端爆发。HBM领域仍在追赶，但端侧AI将拉动NOR Flash需求。</div>
-        <div class="c-fin"><div><div class="fn">2025净利</div><div class="fv up">+49%</div></div><div><div class="fn">赛道</div><div class="fv">NOR Flash</div></div><div><div class="fn">机遇</div><div class="fv">端侧AI</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.gigadevice.com/" target="_blank">gigadevice.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道6-7: AI大模型 + AI应用 -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">06</span>AI大模型 · 国产基座</div>
-    <div class="grid">
-      <div class="card t-app">
-        <div class="c-head"><div><span class="c-name">科大讯飞</span><span class="c-code"> 002230.SZ</span></div><div class="c-tags"><span class="tg rv">+40~70%</span><span class="tg ct">合肥</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>讯飞星火大模型</div><div><span class="ci-l">核心能力</span>全栈AI+行业落地</div></div>
-        <div class="c-desc">唯一基于全国产算力训练的主流大模型。2025净利+40~70%，回款超270亿创历史新高。教育、医疗、办公三大场景规模化落地，星火覆盖130+语种、海外收入增幅2.7倍。</div>
-        <div class="c-fin"><div><div class="fn">2025净利</div><div class="fv up">7.85~9.5亿</div></div><div><div class="fn">回款</div><div class="fv up">270亿+</div></div><div><div class="fn">现金流</div><div class="fv up">30亿+</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.iflytek.com/" target="_blank">iflytek.com</a></div>
-      </div>
-      <div class="card t-app">
-        <div class="c-head"><div><span class="c-name">昆仑万维</span><span class="c-code"> 300418.SZ</span></div><div class="c-tags"><span class="tg rv">+45%营收</span><span class="tg ns">AI短剧</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>天工大模型/SkyReels</div><div><span class="ci-l">核心能力</span>AGI + AI短剧</div></div>
-        <div class="c-desc">2025营收82亿+45%，AI业务收入24亿+11倍成第一大业务。AI短剧创收16亿+865%，但销售费用率51%、全年亏损16亿。视频/音乐模型全球SOTA。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">82亿</div></div><div><div class="fn">AI业务</div><div class="fv up">24亿</div></div><div><div class="fn">净利</div><div class="fv down">-16亿</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.kunlun.com/" target="_blank">kunlun.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">07</span>AI应用 · 落地为王</div>
-    <div class="grid">
-      <div class="card" style="border-left:3px solid #ff9800;">
-        <div class="c-head"><div><span class="c-name">蓝色光标</span><span class="c-code"> 300058.SZ</span></div><div class="c-tags"><span class="tg rv">+107%月涨幅</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>BlueAI平台</div><div><span class="ci-l">核心能力</span>AI营销Agent</div></div>
-        <div class="c-desc">AI营销龙头，2025全年AI驱动收入预计30-50亿。API接入Token调用量超6000亿，136个AI Agent覆盖视频生成、智能投放、内容创作。股价月内最大涨幅107%。</div>
-        <div class="c-fin"><div><div class="fn">AI营收</div><div class="fv up">30~50亿</div></div><div><div class="fn">Token调用</div><div class="fv up">6000亿+</div></div><div><div class="fn">AI Agent</div><div class="fv">136个</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.bluefocus.com/" target="_blank">bluefocus.com</a></div>
-      </div>
-      <div class="card" style="border-left:3px solid #ff9800;">
-        <div class="c-head"><div><span class="c-name">金山办公</span><span class="c-code"> 688111.SH</span></div><div class="c-tags"><span class="tg rv">订阅制</span><span class="tg ct">北京</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>WPS AI</div><div class="ci-l">核心能力</div>办公AI商业化</div>
-        <div class="c-desc">WPS AI从公测进入大规模订阅阶段，用户愿意为AI帮写PPT、总结文档付费。市场评价从"办公软件"切换为"AI劳动力"，是AI商业闭环典范。</div>
-        <div class="c-fin"><div><div class="fn">模式</div><div class="fv up">订阅制</div></div><div><div class="fn">阶段</div><div class="fv">规模化</div></div><div><div class="fn">评价</div><div class="fv">AI劳动力</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.wps.cn/" target="_blank">wps.cn</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 赛道8: AI材料/关键部件 -->
-  <div class="sec">
-    <div class="sec-t"><span class="sec-num">08</span>AI材料 · 隐形冠军</div>
-    <div class="grid">
-      <div class="card" style="border-left:3px solid #ff6b6b;">
-        <div class="c-head"><div><span class="c-name">东山精密</span><span class="c-code"> 002384.SZ</span></div><div class="c-tags"><span class="tg rv">第二曲线</span><span class="tg ct">苏州</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>光模块+PCB+FPC</div><div><span class="ci-l">核心能力</span>并购索尔思光电</div></div>
-        <div class="c-desc">传统PCB龙头2025年通过59亿收购索尔思光电切入光通信赛道，形成PCB+光模块双轮驱动。FPC稳居苹果供应链，新能源业务快速放量。</div>
-        <div class="c-fin"><div><div class="fn">收购</div><div class="fv">索尔思</div></div><div><div class="fn">金额</div><div class="fv">59亿</div></div><div><div class="fn">新赛道</div><div class="fv">光模块</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.dsbj.com/" target="_blank">dsbj.com</a></div>
-      </div>
-      <div class="card" style="border-left:3px solid #ff6b6b;">
-        <div class="c-head"><div><span class="c-name">光迅科技</span><span class="c-code"> 002281.SZ</span></div><div class="c-tags"><span class="tg rv">+44%</span><span class="tg ct">武汉</span></div></div>
-        <div class="c-info"><div><span class="ci-l">王牌产品</span>1.6T光模块</div><div><span class="ci-l">核心能力</span>千亿市值</div></div>
-        <div class="c-desc">2025营收119亿+44%、净利9.5亿+43%。2026Q1延续高增，市值突破千亿。湖北第三家千亿市值上市公司，光谷AI产业链核心。</div>
-        <div class="c-fin"><div><div class="fn">2025营收</div><div class="fv up">119亿</div></div><div><div class="fn">2025净利</div><div class="fv up">9.5亿</div></div><div><div class="fn">市值</div><div class="fv up">1000亿+</div></div></div>
-        <div class="c-links"><a class="cl" href="https://www.accelink.com/" target="_blank">accelink.com</a></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Industry Insights -->
-  <div class="insight">
-    <h3>▌ 2026年AI产业三大核心判断</h3>
-    <p>
-      <strong style="color:var(--ac);">判断一：算力是确定性最强的赛道。</strong>
-      2026Q1国内AI算力需求同比暴增417%，供给增速仅128%。全球科技巨头资本开支近8000亿美元，HBM价格2027年前或每年翻倍。光模块从800G向1.6T/3.2T迭代，PCB材料从M6向M9演进，产业链量价齐升格局明确。<br><br>
-      <strong style="color:var(--a2);">判断二：2026年是AI应用商业化大年。</strong>
-      推理算力已超训练算力，ChatGPT月活10亿，AI代码市场3年达百亿美元。国内蓝色光标AI收入突破30亿+，昆仑万维AI短剧ARR破4亿美元。AI应用从"可用"走向"好用"，商业化闭环正在形成。<br><br>
-      <strong style="color:var(--go);">判断三：国产替代加速，算力主权化。</strong>
-      国产AI芯片单卡性能对标H100，DeepSeek等国货大模型优先适配国产芯片。摩尔线程、沐曦股份科创板上市，国产GPU进入万级集群部署。未来三年，国产算力生态将从"补短板"走向"构生态"。
-    </p>
-  </div>
-
-  <div class="disc">
-    <strong>⚠ 免责声明：</strong>本报告数据来源于上市公司公告、券商研报、财联社、证券时报等公开渠道，统计截至2026年6月。所有数据仅供参考，<strong>不构成任何投资建议</strong>。历史业绩不代表未来收益，AI行业存在技术迭代、政策监管、地缘政治等风险。投资有风险，入市需谨慎。
-  </div>
-
-  <footer class="footer">
-    <div class="brand">富婆的马</div>
-    <div>A股AI赛道全景报告 · 2026年6月 · 八大赛道 · 数据驱动</div>
-  </footer>
+  <div class="footer">Made with ❤️ · 数据驱动 · 投资有风险 入市需谨慎</div>
 </div>
 </body>
 </html>
